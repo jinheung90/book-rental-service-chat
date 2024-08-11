@@ -5,8 +5,10 @@ import {
   SSMClientConfig,
 } from '@aws-sdk/client-ssm';
 import * as process from 'process';
+import { Logger } from '@nestjs/common';
 
 export const AwsParameterStoreProvider = async () => {
+  const logger = new Logger();
   let clientConfig: SSMClientConfig;
   const basePath = process.env['AWS_CONFIG_BASE_PATH'];
   if (process.env['APP_ENV'] === EnvironmentName.LOCAL) {
