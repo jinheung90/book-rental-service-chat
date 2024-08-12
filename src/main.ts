@@ -24,20 +24,20 @@ async function bootstrap() {
     .setVersion('1.0')
     .setDefaultContentType('application/json')
     // .addSecurity()// none
-    // .addServer('chatting-ws', {
-    //   url: process.env['APP_SERVER_URL'],
-    //   protocol: 'socket.io',
-    // })
+    .addServer('chatting-ws', {
+      url: process.env['APP_SERVER_URL'],
+      protocol: 'socket.io',
+    })
     .build();
 
   app.enableCors({
     credentials: true,
     allowedHeaders: ['*'],
     methods: ['*'],
-    origin: ['http://localhost:3000', process.env['USER_SERVICE_APP']],
+    origin: [process.env['CLIENT_HOST'], process.env['USER_SERVICE_APP']],
   });
   const asyncApiDocument = AsyncApiModule.createDocument(app, asyncApi);
-  await AsyncApiModule.setup('/api', app, asyncApiDocument);
+  await AsyncApiModule.setup('/async', app, asyncApiDocument);
   const configService = app.get<ConfigService>(ConfigService);
   const redisAdapter = new RedisIoAdapter(app);
   await redisAdapter.connectToRedis(configService.get('redis-url'));

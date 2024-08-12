@@ -7,7 +7,10 @@ export class UserWebsocketClientService {
     private readonly userWebsocketClientRepository: UserWebsocketClientRepository,
   ) {}
 
-  async setUserClient(userId: string, client: string) {
-    await this.userWebsocketClientRepository.setUserClient(userId, client);
+  setUserClient(userId: string, client: string) {
+    this.userWebsocketClientRepository.setUserClient(userId, client);
+  }
+  deleteUserClient(client: string) {
+    this.userWebsocketClientRepository.deleteUserClient(client);
   }
 }

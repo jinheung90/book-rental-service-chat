@@ -12,6 +12,12 @@ export class AuthService {
       this.logger.error('not exists token');
       return null;
     }
-    return this.jwtService.decode<JwtInfo>(token, option);
+    const resolvedToken = token.split(' ');
+
+    if (resolvedToken.length < 2 || !resolvedToken) {
+      this.logger.error('not bearer token');
+      return null;
+    }
+    return this.jwtService.decode<JwtInfo>(resolvedToken[1], option);
   }
 }
