@@ -4,5 +4,5 @@ COPY /package*.json ./
 COPY /dist ./dist/
 COPY /tsconfig.build.json ./
 COPY /tsconfig.json ./
-COPY /.env ./
+COPY /.env.prod ./.env
 CMD npm run start:prod
