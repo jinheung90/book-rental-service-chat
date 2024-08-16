@@ -34,7 +34,10 @@ async function bootstrap() {
     credentials: true,
     allowedHeaders: ['*'],
     methods: ['*'],
-    origin: [process.env['CLIENT_HOST'], process.env['USER_SERVICE_APP']],
+    origin: [
+      ...process.env['CLIENT_HOST'].split(','),
+      process.env['USER_SERVICE_APP'],
+    ],
   });
   const asyncApiDocument = AsyncApiModule.createDocument(app, asyncApi);
   await AsyncApiModule.setup('/async', app, asyncApiDocument);
