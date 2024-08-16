@@ -6,11 +6,17 @@ import {
 } from '@aws-sdk/client-ssm';
 import * as process from 'process';
 import { Logger } from '@nestjs/common';
+import { fromContainerMetadata } from '@aws-sdk/credential-providers';
 
 export const AwsParameterStoreProvider = async () => {
   const logger = new Logger();
-  let clientConfig: SSMClientConfig;
+  let clientConfig;
   const basePath = process.env['AWS_CONFIG_BASE_PATH'];
+
+  const command = new GetParametersByPathCommand({
+    Path: basePath,
+    Recursive: true,
+  });
   if (process.env['APP_ENV'] === EnvironmentName.LOCAL) {
     clientConfig = {
       region: process.env['AWS_REGION'],
@@ -20,15 +26,11 @@ export const AwsParameterStoreProvider = async () => {
       },
     };
   } else {
-    clientConfig = {
-      region: process.env['AWS_REGION'],
-    };
+    clientConfig = fromContainerMetadata({
+      timeout: 1000,
+      maxRetries: 0,
+    });
   }
-
-  const command = new GetParametersByPathCommand({
-    Path: basePath,
-    Recursive: true,
-  });
   const parameters = await new SSMClient(clientConfig)
     .send(command)
     .then((r) => {

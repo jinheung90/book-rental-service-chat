@@ -5,6 +5,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentName } from './environment-name';
+import { fromContainerMetadata } from '@aws-sdk/credential-providers';
 
 export enum BucketNameType {
   CHAT = 'chat',
@@ -24,9 +25,12 @@ export class AwsS3Provider {
         credentials: credentials,
       });
     } else {
-      this.s3Client = new S3Client({
-        region: this.configService.get('AWS_REGION'),
-      });
+      this.s3Client = new S3Client(
+        fromContainerMetadata({
+          timeout: 1000,
+          maxRetries: 0,
+        }),
+      );
     }
   }
 
