@@ -56,6 +56,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.verbose(`connect ${decoded.sub}`);
     return decoded.sub;
   }
+
   handleDisconnect(client: any): any {
     this.userWebsocketClientService.deleteUserClient(client?.id);
   }

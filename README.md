@@ -1,4 +1,4 @@
-# 중고 책 대여 시스템
+# 중고 책 대여 시스템 
 
 ### 기술 스택
 mongodb, redis, redis pub/sub, nestjs, socket.io, aws parameter store ...
@@ -32,3 +32,4 @@ sequenceDiagram;
     end
     
 ```
+

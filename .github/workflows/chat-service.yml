@@ -1,0 +1,109 @@
+name: book-rental-chat-service
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description:
+        required: true
+env:
+  ECR_REPOSITORY: book-rental-chatting
+  ECS_SERVICE: book-rental-user-service
+  ECS_CLUSTER: book-rental-user-cluster
+  PROFILE: prod
+  MODULE_ROOT_PATH: ./main-api # 해당 모듈의 루트
+  MODULE_JAR: ./main-api/build/libs/main-api.jar # 해당 모듈의 jar
+  MODULE_DEPLOY_PATH: ./main-api/deploy # 해당 모듈의 deploy 디렉토리
+  ECS_TASK_DEFINITION: task_definition.json
+  CONTAINER_NAME: book-rental-user-container
+  AWS_REGION: ap-northeast-2 # aws 리전
+  ECR_IMAGE_TAG: ${{inputs.tags}}
+  CODE_DEPLOY_APP: book-rental-app
+  CODE_DEPLOY_APP_GROUP: book-rental-user-app
+#  ECR_ACCOUNT_ID:
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [ '18.x', '20.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: copy profile .env
+        run: cp .env.$PROFILE .env
+
+      - name: install
+        run: npm ci
+
+      - name: build
+        run: nest build
+#
+#      - name: Copy task-def
+#        run: cp $MODULE_DEPLOY_PATH/$ECS_TASK_DEFINITION $ECS_TASK_DEFINITION
+#
+#      - name: Copy docker file
+#        run: cp $MODULE_DEPLOY_PATH/Dockerfile_$SPRING_PROFILE Dockerfile
+#
+#      - name: Copy appspec.yml
+#        run: cp $MODULE_DEPLOY_PATH/appspec.yml appspec.yml
+#
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+#
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: $ECR_IMAGE_TAG
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG" >> $GITHUB_OUTPUT
+
+#      - name: Fill in the new image ID in the Amazon ECS task definition
+#        id: task-def
+#        uses: aws-actions/amazon-ecs-render-task-definition@v1
+#        with:
+#          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+#          container-name: ${{ env.CONTAINER_NAME }}
+#          image: ${{ steps.build-image.outputs.image }}
+#
+#      - name: Deploy Amazon ECS task definition
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#        with:
+#          task-definition: ${{ steps.task-def.outputs.task-definition }}
+#          service: ${{ env.ECS_SERVICE }}
+#          cluster: ${{ env.ECS_CLUSTER }}
+#          wait-for-service-stability: true
+#          codedeploy-appspec: appspec.yml
+#          codedeploy-application: ${{ env.CODE_DEPLOY_APP }}
+#          codedeploy-deployment-group: ${{ env.CODE_DEPLOY_APP_GROUP }}
+#
+
+
+
+
+
+
+
+
+
+
+
+
