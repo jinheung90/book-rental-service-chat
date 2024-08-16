@@ -7,18 +7,15 @@ on:
         required: true
 env:
   ECR_REPOSITORY: book-rental-chatting
-  ECS_SERVICE: book-rental-user-service
+  ECS_SERVICE: book-rental-chat-service
   ECS_CLUSTER: book-rental-user-cluster
   PROFILE: prod
-  MODULE_ROOT_PATH: ./main-api # 해당 모듈의 루트
-  MODULE_JAR: ./main-api/build/libs/main-api.jar # 해당 모듈의 jar
-  MODULE_DEPLOY_PATH: ./main-api/deploy # 해당 모듈의 deploy 디렉토리
   ECS_TASK_DEFINITION: task_definition.json
-  CONTAINER_NAME: book-rental-user-container
+  CONTAINER_NAME: chatting
   AWS_REGION: ap-northeast-2 # aws 리전
   ECR_IMAGE_TAG: ${{inputs.tags}}
   CODE_DEPLOY_APP: book-rental-app
-  CODE_DEPLOY_APP_GROUP: book-rental-user-app
+  CODE_DEPLOY_APP_GROUP: book-rental-chat-app
 #  ECR_ACCOUNT_ID:
 jobs:
   build:
@@ -42,16 +39,7 @@ jobs:
 
       - name: build
         run: npm run build
-#
-#      - name: Copy task-def
-#        run: cp $MODULE_DEPLOY_PATH/$ECS_TASK_DEFINITION $ECS_TASK_DEFINITION
-#
-#      - name: Copy docker file
-#        run: cp $MODULE_DEPLOY_PATH/Dockerfile_$SPRING_PROFILE Dockerfile
-#
-#      - name: Copy appspec.yml
-#        run: cp $MODULE_DEPLOY_PATH/appspec.yml appspec.yml
-#
+
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -76,25 +64,25 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG" >> $GITHUB_OUTPUT
 
-#      - name: Fill in the new image ID in the Amazon ECS task definition
-#        id: task-def
-#        uses: aws-actions/amazon-ecs-render-task-definition@v1
-#        with:
-#          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-#          container-name: ${{ env.CONTAINER_NAME }}
-#          image: ${{ steps.build-image.outputs.image }}
-#
-#      - name: Deploy Amazon ECS task definition
-#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-#        with:
-#          task-definition: ${{ steps.task-def.outputs.task-definition }}
-#          service: ${{ env.ECS_SERVICE }}
-#          cluster: ${{ env.ECS_CLUSTER }}
-#          wait-for-service-stability: true
-#          codedeploy-appspec: appspec.yml
-#          codedeploy-application: ${{ env.CODE_DEPLOY_APP }}
-#          codedeploy-deployment-group: ${{ env.CODE_DEPLOY_APP_GROUP }}
-#
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+          codedeploy-appspec: appspec.yml
+          codedeploy-application: ${{ env.CODE_DEPLOY_APP }}
+          codedeploy-deployment-group: ${{ env.CODE_DEPLOY_APP_GROUP }}
+
 
 
 
