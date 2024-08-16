@@ -6,6 +6,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { RedisClientOptions } from 'redis';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
     }),
     ChatModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
