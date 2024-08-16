@@ -36,6 +36,7 @@
     }
   ],
   "family": "book-rental-chat-task",
+  "taskRoleArn": "arn:aws:iam::471112975229:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::471112975229:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "revision": 1,

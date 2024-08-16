@@ -1,15 +1,10 @@
 import { EnvironmentName } from './environment-name';
-import {
-  GetParametersByPathCommand,
-  SSMClient,
-  SSMClientConfig,
-} from '@aws-sdk/client-ssm';
+import { GetParametersByPathCommand, SSMClient } from '@aws-sdk/client-ssm';
 import * as process from 'process';
-import { Logger } from '@nestjs/common';
+
 import { fromContainerMetadata } from '@aws-sdk/credential-providers';
 
 export const AwsParameterStoreProvider = async () => {
-  const logger = new Logger();
   let clientConfig;
   const basePath = process.env['AWS_CONFIG_BASE_PATH'];
 
