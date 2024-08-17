@@ -1,9 +1,9 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:471112975229:task-definition/book-rental-chat-task",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:471112975229:task-definition/book-rental-chat-task:8",
   "containerDefinitions": [
     {
       "name": "chatting",
-      "image": "471112975229.dkr.ecr.ap-northeast-2.amazonaws.com/book-rental-chatting",
+      "image": "471112975229.dkr.ecr.ap-northeast-2.amazonaws.com/book-rental-chatting:test",
       "cpu": 0,
       "portMappings": [
         {
@@ -16,10 +16,8 @@
       ],
       "essential": true,
       "environment": [],
-      "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
-      "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -29,8 +27,7 @@
           "max-buffer-size": "25m",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
-        },
-        "secretOptions": []
+        }
       },
       "systemControls": []
     }
@@ -39,7 +36,7 @@
   "taskRoleArn": "arn:aws:iam::471112975229:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::471112975229:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 1,
+  "revision": 8,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -57,6 +54,9 @@
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
     },
     {
       "name": "ecs.capability.execution-role-ecr-pull"
@@ -85,7 +85,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2024-08-16T16:22:54.258Z",
-  "registeredBy": "arn:aws:iam::471112975229:root",
+  "registeredAt": "2024-08-16T21:12:03.283Z",
+  "registeredBy": "arn:aws:iam::471112975229:user/access-ecs-user",
   "tags": []
 }
