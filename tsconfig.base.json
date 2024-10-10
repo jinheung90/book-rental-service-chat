@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@eco-book/auth-core": ["libs/auth-core/src/index.ts"],
+      "@eco-book/aws-parameter-store": [
+        "libs/aws-parameter-store/src/index.ts"
+      ],
+      "@eco-book/aws-s3": ["libs/aws-s3/src/index.ts"],
+      "@eco-book/chatting-core": ["libs/chatting-core/src/index.ts"],
+      "@eco-book/type-common": ["libs/type-common/src/index.ts"],
+      "@eco-book/winston-logger": ["libs/winston-logger/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

@@ -1,7 +1,14 @@
 # 중고 책 대여 시스템 
 
 ### 기술 스택
-mongodb, redis, redis pub/sub, nestjs, socket.io, aws parameter store ...
+spring, redis, redis pub/sub, nestjs, socket.io, aws parameter store
+
+ts-migrate-mongoose
+
+### 폴더 구조
+
+
+
 
 ### 채팅 플로우
 
@@ -31,5 +38,12 @@ sequenceDiagram;
         server ->> borrower: 유저가 오프라인 입니다.
     end
     
+```
+
+
+## @NX
+```
+eslint 에러로 인한 버전 다운 그레이드 (eslint 8.55.0)
+https://github.com/nrwl/nx/issues/20943
 ```
 

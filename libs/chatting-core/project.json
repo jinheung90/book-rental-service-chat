@@ -1,0 +1,26 @@
+{
+  "name": "chatting-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/chatting-core/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/chatting-core",
+        "tsConfig": "libs/chatting-core/tsconfig.lib.json",
+        "packageJson": "libs/chatting-core/package.json",
+        "main": "libs/chatting-core/src/index.ts",
+        "assets": ["libs/chatting-core/*.md"]
+      }
+    }
+  },
+  "lint": {
+    "executor": "@nx/eslint:lint",
+    "options": {
+
+    }
+  }
+}
